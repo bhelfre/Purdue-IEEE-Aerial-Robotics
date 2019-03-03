@@ -67,7 +67,7 @@ for currTime in range(timeDelta, maxSimTime, timeDelta):
 			fpDict['avoiding'] = 0;
 
 	# Calculate the aircarft's new state
-	[currState, currLoc] = getNewACState(fpDict, sd, currState, currLoc);
+	[currState, currLoc] = getNewACState(fpDict, [timeDelta, maxSimTime], currState, currLoc);
 
 	# Add current position information to flight data array
 	data[iter][:] = [currTime, fpDict['leg'], currState, currLoc, fpDict['avoiding']];
