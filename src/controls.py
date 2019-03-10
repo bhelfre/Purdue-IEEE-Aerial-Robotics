@@ -1,27 +1,30 @@
-def getControlParams(planeData, desHdg, desAlt, desVel):
+def getControlParams(planeData, desState):
 #Replaces the function controlPlane.m
 #   Contains the control algorithms for the aircraft's control surfaces.
 #   Uses a PID system to continually adjust the throttle, ailerons, and
 #   elevator.
 ## Setup
-	currLoc = planeData[0:2] #lat, long, alt
-	planeTelemetry = planeData[3:6] #speed, heading, pitch, roll
-	#controlsData = planeData[7:9] #elevator, aileron, rudder
-	currAlt = currLoc[2]
-	currVel = planeTelemetry[0]
-	currHdg = planeTelemetry[1]
-	currPitch = planeTelemetry[2]
-	currRoll = planeTelemetry[3]
-	#currElevator = controlsData(1)
-	#currAileron = controlsData(2)
-	#currRudder = controlsData(3)
-
-	throttle = getNewThrottle(desVel, currVel)
-	elevator = getNewElevator(desAlt, currAlt, desPitch, currPitch)
-	aileron = getNewAileron(desHdg, currHdg)
-	rudder = getNewRudder()
+	#planeData specified as: [lat, lon, alt, vel, hdg, pitch, roll, elev, ail, rud]
+	desHdg = desState[0]
+	desAlt = desState[1]
+	desVel = desState[2]
+	currAlt = planeData[2]
+	currVel = planeData[3]
+	currHdg = planeData[4]
+	currPitch = planeData[5]
+	currRoll = planeData[6]
 	
-def getNewThrottle(desVel, currVel):
+	#print(currVel)
+	#print(desVel)
+
+	# Get new parameter values
+	throttle = __getNewThrottle(desVel, currVel)
+	elevator = __getNewElevator(desAlt, currAlt, currPitch)
+	aileron = __getNewAileron(desHdg, currHdg, currRoll)
+	rudder = __getNewRudder()
+	return [throttle, elevator, aileron, rudder]
+	
+def __getNewThrottle(desVel, currVel):
 	#Parameter definitions
 	throttleGain_P = 0.5
 	throttleGain_I = 1
@@ -36,7 +39,7 @@ def getNewThrottle(desVel, currVel):
 		throttle = 0
 	return throttle
 
-def getNewElevator(desAlt, currAlt, currPitch):
+def __getNewElevator(desAlt, currAlt, currPitch):
 	#Parameter definitions
 	maxPitch = 15
 	elevatorGain_P = 0.05 #orig 0.05
@@ -51,7 +54,7 @@ def getNewElevator(desAlt, currAlt, currPitch):
 		desPitch = -maxPitch
 	return (desPitch - currPitch) * elevatorGain_P
 	
-def getNewAileron(desHdg, currHdg):
+def __getNewAileron(desHdg, currHdg, currRoll):
 	#Parameter definitions
 	head2RollGain_P = 1.8 #orig 1.8
 	head2RollGain_I = 0
@@ -71,6 +74,6 @@ def getNewAileron(desHdg, currHdg):
 		head2Roll = -maxRoll
 	return (head2Roll - currRoll) * aileronGain_P
 	
-def getNewRudder():
+def __getNewRudder():
 	#Rudder is currently unused. Add code here to implement it.
 	return 0
