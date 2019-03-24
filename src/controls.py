@@ -22,7 +22,7 @@ def getControlParams(planeData, desState):
 	elevator = __getNewElevator(desAlt, currAlt, currPitch)
 	aileron = __getNewAileron(desHdg, currHdg, currRoll)
 	rudder = __getNewRudder()
-	return [throttle, elevator, aileron, rudder]
+	return [aileron, elevator, rudder, throttle]
 	
 def __getNewThrottle(desVel, currVel):
 	#Parameter definitions

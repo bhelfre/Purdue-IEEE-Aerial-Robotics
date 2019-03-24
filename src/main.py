@@ -1,5 +1,6 @@
 import xpc
 import math
+import time
 import simsupport
 import controls as ctrl
 import flightmath as fm
@@ -12,7 +13,7 @@ def runSimulation():
 			'lat'    : [ 0, 148, 150,   0], #Waypoint latitude (decimal degrees)
 			'lon'    : [ 0, -15, 140,   0], #Waypoint longitude (decimal degrees)
 			'alt'    : [ 0,   0,   0,   0], #Waypoint altitude (m)
-			'vel'    : [20,  20,  20,  20], #Desired velocity at each waypoint (knots)
+			'vel'    : [50,  50,  50,  50], #Desired velocity at each waypoint (knots)
 			'cylLat' : [-5,  10, 100,  60, 50], #Latitude of avoidance cylinder (dec deg)
 			'cylLon' : [40, 135, 100, 160, 68], #Longitude of avoidance cylinder (dec deg)
 			'cylR'   : [ 5,  15,  10,  10, 10], #Radius of avoidance cylinder (m)
@@ -32,7 +33,7 @@ def runSimulation():
 
 		#Define simulation variables
 		maxSimTime = 60	#Maximum simulation time (s)
-		initialTime = client.getDREF("sim/time/local_time_sec")[0];
+		initialTime = int(round(time.time())) #client.getDREF("sim/time/local_time_sec")[0];
 		currTime = initialTime
 		planeData = simsupport.getPlaneData(client)
 		currLoc = planeData[0:2]
@@ -87,9 +88,10 @@ def runSimulation():
 			# Add current position information to flight data array
 			#data[iter][:] = [currTime, fp['leg'], currState, currLoc, fp['avoiding']];
 			#iter = iter + 1;
-			currTime = client.getDREF("sim/time/local_time_sec")[0];
+			currTime = int(round(time.time())) #client.getDREF("sim/time/local_time_sec")[0];
+			time.sleep(0.1)
 	
-	
+		print("Simulation finished")
 	
 if __name__ == "__main__":
 	runSimulation()
